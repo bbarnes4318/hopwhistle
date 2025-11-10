@@ -1,0 +1,18 @@
+# Ignore packages directory - these are workspace dependencies, not deployable services
+packages/
+apps/freeswitch/
+apps/kamailio/
+apps/rtpengine/
+apps/media/
+infra/
+docs/
+tests/
+freeswitch/
+kamailio/
+rtpengine/
+scripts/
+*.md
+!README.md
+!DEPLOYMENT.md
+!QUICK_DEPLOY.md
+

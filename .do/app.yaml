@@ -6,6 +6,7 @@ services:
       repo: bbarnes4318/hopwhistle
       branch: master
       deploy_on_push: true
+    source_dir: /
     run_command: pnpm --filter @hopwhistle/api start
     environment_slug: node-js
     instance_count: 1
@@ -47,7 +48,6 @@ services:
         value: 'us-east-1'
       - key: S3_FORCE_PATH_STYLE
         value: 'false'
-      # SignalWire Provisioning
       - key: SIGNALWIRE_PROJECT_ID
         scope: RUN_TIME
         type: SECRET
@@ -57,7 +57,6 @@ services:
       - key: SIGNALWIRE_SPACE_URL
         scope: RUN_TIME
         type: SECRET
-      # FreeSWITCH/Telephony (if using external services)
       - key: RTPENGINE_URL
         scope: RUN_TIME
         type: SECRET
@@ -69,7 +68,6 @@ services:
       - key: FREESWITCH_ESL_PASSWORD
         scope: RUN_TIME
         type: SECRET
-      # ClickHouse Analytics (Optional)
       - key: CLICKHOUSE_URL
         scope: RUN_TIME
         type: SECRET
@@ -80,7 +78,6 @@ services:
         type: SECRET
       - key: CLICKHOUSE_DATABASE
         value: 'hopwhistle_analytics'
-      # Recording Lifecycle
       - key: RECORDING_HOT_TO_WARM_DAYS
         value: '30'
       - key: RECORDING_WARM_TO_COLD_DAYS
@@ -89,7 +86,6 @@ services:
         value: '365'
       - key: RECORDING_LIFECYCLE_ENABLED
         value: 'true'
-      # Observability
       - key: LOG_LEVEL
         value: 'info'
       - key: ENABLE_TRACING
@@ -97,7 +93,6 @@ services:
       - key: JAEGER_ENDPOINT
         scope: RUN_TIME
         type: SECRET
-      # Third-Party Integrations (Optional)
       - key: TWILIO_API_KEY
         scope: RUN_TIME
         type: SECRET
@@ -110,13 +105,11 @@ services:
       - key: JORNAYA_API_KEY
         scope: RUN_TIME
         type: SECRET
-      # Stripe (Optional)
       - key: STRIPE_ENABLED
         value: 'false'
       - key: STRIPE_SECRET_KEY
         scope: RUN_TIME
         type: SECRET
-      # SMTP Email (Optional)
       - key: SMTP_HOST
         scope: RUN_TIME
         type: SECRET
@@ -132,7 +125,6 @@ services:
         type: SECRET
       - key: SMTP_FROM
         value: 'noreply@hopwhistle.com'
-      # Default Tenant
       - key: DEFAULT_TENANT_ID
         scope: RUN_TIME
         type: SECRET
@@ -148,6 +140,7 @@ services:
       repo: bbarnes4318/hopwhistle
       branch: master
       deploy_on_push: true
+    source_dir: /
     run_command: pnpm --filter @hopwhistle/web start
     environment_slug: node-js
     instance_count: 1
@@ -182,6 +175,7 @@ services:
       repo: bbarnes4318/hopwhistle
       branch: master
       deploy_on_push: true
+    source_dir: /
     run_command: pnpm --filter @hopwhistle/worker start
     environment_slug: node-js
     instance_count: 1
@@ -202,7 +196,6 @@ services:
         value: '5'
       - key: METRICS_PORT
         value: '9091'
-      # ClickHouse Analytics (Optional)
       - key: CLICKHOUSE_URL
         scope: RUN_TIME
         type: SECRET
@@ -213,7 +206,6 @@ services:
         type: SECRET
       - key: CLICKHOUSE_DATABASE
         value: 'hopwhistle_analytics'
-      # Observability
       - key: LOG_LEVEL
         value: 'info'
       - key: ENABLE_TRACING
@@ -221,7 +213,6 @@ services:
       - key: JAEGER_ENDPOINT
         scope: RUN_TIME
         type: SECRET
-      # Stripe (Optional)
       - key: STRIPE_ENABLED
         value: 'false'
       - key: STRIPE_SECRET_KEY
