@@ -1,37 +1,41 @@
 FROM debian:12-slim
 
-# Install kamailio and additional tools
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+# Install prerequisites
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gnupg2 \
+    ca-certificates \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add Kamailio repository
+RUN echo "deb http://deb.kamailio.org/kamailio60 bookworm main" > /etc/apt/sources.list.d/kamailio.list
+RUN wget -O- https://deb.kamailio.org/kamailiodebkey.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/kamailio.gpg
+
+# Install Kamailio and required modules
+RUN apt-get update && apt-get install -y --no-install-recommends \
     kamailio \
     kamailio-outbound-modules \
     kamailio-tls-modules \
-    curl \
-    jq \
+    kamailio-topoh-modules \
+    kamailio-pike-modules \
     gettext-base \
-    ca-certificates \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy configuration
+# Create kamailio user and group
+RUN mkdir -p /var/run/kamailio \
+    && chown -R kamailio:kamailio /var/run/kamailio
+
+# Copy configuration files
 COPY kamailio.cfg /etc/kamailio/kamailio.cfg
 COPY dispatcher.list /etc/kamailio/dispatcher.list
-COPY scripts/ /usr/local/bin/
 
-# Copy entrypoint
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh /usr/local/bin/*.sh
-
-# Create directories
-RUN mkdir -p /var/run/kamailio && \
-    chown -R kamailio:kamailio /var/run/kamailio
-
-# Expose SIP ports
+# Expose ports
 EXPOSE 5060/udp 5060/tcp 5061/tcp
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-  CMD kamctl ping || exit 1
+    CMD kamctl ping || exit 1
 
-# Start Kamailio
-ENTRYPOINT ["/entrypoint.sh"]
+# Run Kamailio
+USER kamailio
+CMD ["kamailio", "-DD", "-E", "-e"]
