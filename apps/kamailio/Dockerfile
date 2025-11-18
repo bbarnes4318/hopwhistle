@@ -6,8 +6,6 @@ RUN apt-get update && \
     kamailio \
     kamailio-outbound-modules \
     kamailio-tls-modules \
-    kamailio-topoh-modules \
-    kamailio-pike-modules \
     curl \
     jq \
     gettext-base \
