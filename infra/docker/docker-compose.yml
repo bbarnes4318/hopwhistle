@@ -80,7 +80,7 @@ services:
       - PUBLIC_IP=${PUBLIC_IP}
       - FREESWITCH_NODES=${FREESWITCH_NODES:-freeswitch:5062}
       - RTPENGINE_SOCK=${RTPENGINE_SOCK:-udp:rtpengine:22222}
-      - DB_URL=${DB_URL:-}
+      - DB_URL=${KAMAILIO_DB_URL}
     volumes:
       - kamailio_data:/var/run/kamailio
     healthcheck:
