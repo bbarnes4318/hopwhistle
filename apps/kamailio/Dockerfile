@@ -18,24 +18,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     kamailio-tls-modules \
     kamailio-topoh-modules \
     kamailio-pike-modules \
+    curl \
+    jq \
     gettext-base \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Create kamailio user and group
-RUN mkdir -p /var/run/kamailio \
-    && chown -R kamailio:kamailio /var/run/kamailio
-
-# Copy configuration files
+# Copy configuration
 COPY kamailio.cfg /etc/kamailio/kamailio.cfg
 COPY dispatcher.list /etc/kamailio/dispatcher.list
+COPY scripts/ /usr/local/bin/
 
-# Expose ports
+# Create directories
+RUN mkdir -p /var/run/kamailio && \
+    chown -R kamailio:kamailio /var/run/kamailio
+
+# Expose SIP ports
 EXPOSE 5060/udp 5060/tcp 5061/tcp
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD kamctl ping || exit 1
+  CMD kamctl ping || exit 1
 
-# Run Kamailio
+# Start Kamailio
 USER kamailio
 CMD ["kamailio", "-DD", "-E", "-e"]
