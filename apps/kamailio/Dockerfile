@@ -16,12 +16,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     kamailio \
     kamailio-outbound-modules \
     kamailio-tls-modules \
-    kamailio-topoh-modules \
-    kamailio-python3-modules \
     curl \
     jq \
     gettext-base \
     ca-certificates \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy configuration
