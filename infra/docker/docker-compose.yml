@@ -77,12 +77,7 @@ services:
       - '5060:5060/tcp'
       - '5061:5061/tcp'
     environment:
-<<<<<<< HEAD
       - FREESWITCH_NODES=${FREESWITCH_NODES:-freeswitch:506}
-=======
-      - PUBLIC_IP=${PUBLIC_IP}
-      - FREESWITCH_NODES=${FREESWITCH_NODES:-freeswitch:5062}
->>>>>>> ffaa4aa (fix: update kamailio and freeswitch configuration)
       - RTPENGINE_SOCK=${RTPENGINE_SOCK:-udp:rtpengine:22222}
       - DB_URL=${DB_URL:-}
     volumes:
