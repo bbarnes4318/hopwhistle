@@ -1,16 +1,5 @@
 FROM praekeltfoundation/freeswitch:latest
 
-# Install additional tools
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    curl \
-    awscli \
-    ca-certificates \
-    ffmpeg \
-    gettext-base \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
 # Copy custom configuration
 COPY conf/ /usr/local/freeswitch/conf/
 
