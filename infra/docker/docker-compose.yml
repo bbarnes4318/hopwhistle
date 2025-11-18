@@ -91,32 +91,6 @@ services:
     depends_on:
       freeswitch:
         condition: service_healthy
-      rtpengine:
-        condition: service_started
-    networks:
-      - default
-
-  rtpengine:
-    build:
-      context: ../../apps/rtpengine
-      dockerfile: Dockerfile
-    ports:
-      - '22222:22222/udp'
-      - '22222:22222/tcp'
-      - '10000-20000:10000-20000/udp'
-    environment:
-      - RTPENGINE_INTERFACE=${RTPENGINE_INTERFACE:-auto}
-    volumes:
-      - rtpengine_recordings:/recordings
-    cap_add:
-      - NET_ADMIN
-      - SYS_ADMIN
-    healthcheck:
-      test: ['CMD', 'rtpengine-ctl', '-t', '127.0.0.1:9900', 'ping']
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
     networks:
       - default
 
@@ -146,5 +120,4 @@ volumes:
   freeswitch_recordings:
   freeswitch_conf:
   kamailio_data:
-  rtpengine_recordings:
   minio_data:
