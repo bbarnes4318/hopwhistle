@@ -24,9 +24,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy configuration
-COPY kamailio.cfg /etc/kamailio/kamailio.cfg
-COPY dispatcher.list /etc/kamailio/dispatcher.list
-COPY scripts/ /usr/local/bin/
+COPY apps/kamailio/kamailio.cfg /etc/kamailio/kamailio.cfg
+COPY apps/kamailio/dispatcher.list /etc/kamailio/dispatcher.list
+COPY apps/kamailio/scripts/ /usr/local/bin/
 
 # Create directories
 RUN mkdir -p /var/run/kamailio && \
