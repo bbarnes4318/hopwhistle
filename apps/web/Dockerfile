@@ -32,7 +32,6 @@ COPY . .
 WORKDIR /app/apps/web
 
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV TURBOPACK=0
 
 # Install dependencies
 RUN pnpm add next @xyflow/react next-themes html2canvas react-markdown @tailwindcss/typography
@@ -47,7 +46,7 @@ RUN rm -f playwright.config.ts
 RUN rm -rf e2e
 
 # Run build using local binary
-RUN ./node_modules/.bin/next build
+RUN ./node_modules/.bin/next build --no-turbopack
 
 FROM base AS runner
 WORKDIR /app
