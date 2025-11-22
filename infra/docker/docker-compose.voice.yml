@@ -40,6 +40,9 @@ services:
     networks:
       - voice_net
       - data_net
+    cap_add:
+      - SYS_NICE
+      - IPC_LOCK
     # FreeSWITCH starts independently to avoid loops
 
   kamailio:
