@@ -18,7 +18,7 @@ COPY apps/freeswitch/conf/ /etc/freeswitch/
 COPY apps/freeswitch/scripts/ /usr/local/freeswitch/scripts/
 
 # Copy vars.xml template
-COPY apps/freeswitch/vars.xml /etc/freeswitch/vars.xml.template
+COPY apps/freeswitch/conf/vars.xml /etc/freeswitch/vars.xml.template
 
 # Copy entrypoint
 COPY apps/freeswitch/docker-entrypoint.sh /docker-entrypoint.sh
