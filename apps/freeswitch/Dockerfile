@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y     gnupg2     wget     lsb-release    
 
 # Add SignalWire public repo key and source
 ARG SIGNALWIRE_TOKEN
-RUN wget --http-user=signalwire --http-password=$SIGNALWIRE_TOKEN -O - https://freeswitch.signalwire.com/repo/deb/debian-release/signalwire-freeswitch-public.gpg | apt-key add -
+RUN wget --http-user=signalwire --http-password=$SIGNALWIRE_TOKEN -O - https://freeswitch.signalwire.com/repo/deb/debian-release/signalwire-freeswitch-repo.gpg | apt-key add -
 RUN echo "deb https://signalwire:$SIGNALWIRE_TOKEN@freeswitch.signalwire.com/repo/deb/debian-release/ `lsb_release -sc` main" > /etc/apt/sources.list.d/freeswitch.list
 
 # Install FreeSWITCH
