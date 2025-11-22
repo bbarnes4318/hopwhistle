@@ -17,6 +17,7 @@ COPY packages/sdk/package.json ./packages/sdk/
 COPY packages/routing-dsl/package.json ./packages/routing-dsl/
 
 # Fix: Allow updating lockfile
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 RUN pnpm install --no-frozen-lockfile
 
 FROM base AS builder
