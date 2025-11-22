@@ -1,4 +1,6 @@
 FROM node:20-alpine AS base
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
