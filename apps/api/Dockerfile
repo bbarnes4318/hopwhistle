@@ -33,9 +33,9 @@ COPY . .
 RUN pnpm install --no-frozen-lockfile
 
 # Build workspace dependencies
-RUN pnpm --filter @hopwhistle/shared build
-RUN pnpm --filter @hopwhistle/routing-dsl build
-RUN pnpm --filter @hopwhistle/sdk build
+RUN pnpm --filter @hopwhistle/shared exec tsup --no-dts
+RUN pnpm --filter @hopwhistle/routing-dsl exec tsup --no-dts
+RUN pnpm --filter @hopwhistle/sdk exec tsup --no-dts
 
 WORKDIR /app/apps/api
 
