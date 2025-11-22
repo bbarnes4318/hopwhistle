@@ -49,7 +49,7 @@ RUN rm -f playwright.config.ts
 RUN rm -rf e2e
 
 # Run build using local binary
-RUN ./node_modules/.bin/next build --no-turbopack
+RUN ./node_modules/.bin/next build
 
 FROM base AS runner
 WORKDIR /app
