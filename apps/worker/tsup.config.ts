@@ -10,5 +10,5 @@ export default defineConfig({
   minify: false,
   target: 'es2022',
   outDir: 'dist',
-  noExternal: ['@hopwhistle/routing-dsl', '@hopwhistle/shared', '@hopwhistle/sdk'],
+  noExternal: [/@hopwhistle\/.*/],
 });
