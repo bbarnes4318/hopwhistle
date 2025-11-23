@@ -1,4 +1,7 @@
-import { compare, hash } from 'bcryptjs';
+// eslint-disable-next-line import/default
+import bcrypt from 'bcryptjs';
+// eslint-disable-next-line import/no-named-as-default-member
+const { compare } = bcrypt;
 import { FastifyInstance } from 'fastify';
 
 import { getPrismaClient } from '../lib/prisma.js';
@@ -132,49 +135,56 @@ export async function registerAuthRoutes(fastify: FastifyInstance): Promise<void
   });
 
   // Get CSRF token (for web app)
-  fastify.get('/auth/csrf', {
-    preHandler: [authenticate],
-  }, async (request, reply) => {
-    const sessionId = request.cookies.sessionId || request.headers['x-session-id'] as string;
-    if (!sessionId) {
-      reply.code(400).send({
-        error: {
-          code: 'BAD_REQUEST',
-          message: 'Session required',
-        },
-      });
-      return;
-    }
+  fastify.get(
+    '/auth/csrf',
+    {
+      preHandler: [authenticate],
+    },
+    async (request, reply) => {
+      const sessionId = request.cookies.sessionId || (request.headers['x-session-id'] as string);
+      if (!sessionId) {
+        reply.code(400).send({
+          error: {
+            code: 'BAD_REQUEST',
+            message: 'Session required',
+          },
+        });
+        return;
+      }
 
-    const csrfToken = generateCsrfToken(sessionId);
-    reply.send({ csrfToken });
-  });
+      const csrfToken = generateCsrfToken(sessionId);
+      reply.send({ csrfToken });
+    }
+  );
 
   // Logout
-  fastify.post('/auth/logout', {
-    preHandler: [authenticate],
-  }, async (request, reply) => {
-    const sessionId = request.cookies.sessionId;
-    if (sessionId) {
-      const { deleteSession } = await import('../middleware/session.js');
-      await deleteSession(sessionId);
-      reply.clearCookie('sessionId');
+  fastify.post(
+    '/auth/logout',
+    {
+      preHandler: [authenticate],
+    },
+    async (request, reply) => {
+      const sessionId = request.cookies.sessionId;
+      if (sessionId) {
+        const { deleteSession } = await import('../middleware/session.js');
+        await deleteSession(sessionId);
+        reply.clearCookie('sessionId');
+      }
+
+      await auditLog({
+        tenantId: request.user.tenantId,
+        userId: request.user.userId,
+        action: 'auth.logout',
+        entityType: 'User',
+        resource: '/auth/logout',
+        method: 'POST',
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        requestId: request.id,
+        success: true,
+      });
+
+      reply.send({ success: true });
     }
-
-    await auditLog({
-      tenantId: request.user.tenantId,
-      userId: request.user.userId,
-      action: 'auth.logout',
-      entityType: 'User',
-      resource: '/auth/logout',
-      method: 'POST',
-      ipAddress: request.ip,
-      userAgent: request.headers['user-agent'],
-      requestId: request.id,
-      success: true,
-    });
-
-    reply.send({ success: true });
-  });
+  );
 }
-
