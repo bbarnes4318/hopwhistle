@@ -18,10 +18,10 @@ RUN apt-get update && \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy files from current context (build context is already apps/kamailio/)
-COPY entrypoint.sh /entrypoint.sh
-COPY kamailio.cfg /etc/kamailio/kamailio.cfg
-COPY dispatcher.list /etc/kamailio/dispatcher.list
+# Copy files from current context (build context is root)
+COPY apps/kamailio/entrypoint.sh /entrypoint.sh
+COPY apps/kamailio/kamailio.cfg /etc/kamailio/kamailio.cfg
+COPY apps/kamailio/dispatcher.list /etc/kamailio/dispatcher.list
 
 RUN chmod +x /entrypoint.sh
 

@@ -72,8 +72,8 @@ services:
 
   kamailio:
     build:
-      context: ../../apps/kamailio
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: apps/kamailio/Dockerfile
     ports:
       - '5060:5060/udp'
       - '5060:5060/tcp'
