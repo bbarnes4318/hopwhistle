@@ -68,9 +68,10 @@ async function buildServer() {
     timeWindow: '1 minute',
     keyGenerator: request => {
       // Use API key ID if available, otherwise use IP
-      return request.user?.apiKeyId || request.ip || 'unknown';
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+      return (request.user as any)?.apiKeyId || request.ip || 'unknown';
     },
-    errorResponseBuilder: (request, context) => {
+    errorResponseBuilder: (_request, context) => {
       return {
         error: {
           code: 'RATE_LIMIT_EXCEEDED',
@@ -82,9 +83,8 @@ async function buildServer() {
   });
 
   // Metrics endpoint
-  server.get('/metrics', async (request, reply) => {
-    reply.type('text/plain');
-    return register.metrics();
+  server.get('/metrics', async (_request, reply) => {
+    return reply.type('text/plain').send(await register.metrics());
   });
 
   // Load OpenAPI spec path
@@ -96,9 +96,12 @@ async function buildServer() {
     specification: {
       path: './openapi.yaml',
       baseDir: baseDir,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       postProcessor: (spec: any) => {
         // Ensure version is correct for compatibility
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         spec.openapi = '3.0.3';
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return spec;
       },
     },
@@ -179,7 +182,7 @@ async function buildServer() {
   // Error handler
   server.setErrorHandler((error, request, reply) => {
     server.log.error(error);
-    reply.status(error.statusCode || 500).send({
+    void reply.status(error.statusCode || 500).send({
       error: {
         code: error.code || 'INTERNAL_ERROR',
         message: error.message || 'Internal server error',
@@ -221,4 +224,4 @@ const start = async () => {
   }
 };
 
-start();
+void start();
