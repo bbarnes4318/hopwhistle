@@ -1,6 +1,8 @@
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
-import { Resource } from '@opentelemetry/resources';
+// eslint-disable-next-line import/default
+import pkg from '@opentelemetry/resources';
+const { Resource } = pkg;
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 
@@ -49,4 +51,3 @@ export function shutdownTracing(): Promise<void> {
   }
   return Promise.resolve();
 }
-
