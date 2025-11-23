@@ -30,7 +30,7 @@ RUN pnpm --filter @hopwhistle/sdk exec tsup --no-dts
 
 WORKDIR /app/apps/worker
 
-RUN pnpm add -D tsup typescript
+
 
 RUN pnpm build
 

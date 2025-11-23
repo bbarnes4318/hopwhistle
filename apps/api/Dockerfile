@@ -56,7 +56,7 @@ RUN sed -i "s|from '../../lib/|from '../../../lib/|g" src/services/provisioning/
 RUN pnpm exec prisma generate
 
 # Install build tools
-RUN pnpm add -D tsup typescript
+
 
 # Build ignoring type errors
 RUN pnpm exec tsup --no-dts
