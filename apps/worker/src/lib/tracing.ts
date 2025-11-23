@@ -42,7 +42,7 @@ export function initTracing(serviceName: string = 'hopwhistle-worker'): void {
       ],
     });
 
-    sdk.start();
+    sdk?.start();
     console.log(`[Tracing] Initialized for ${serviceName}, exporting to ${jaegerEndpoint}`);
   } catch (error) {
     console.error('[Tracing] Failed to initialize:', error);
