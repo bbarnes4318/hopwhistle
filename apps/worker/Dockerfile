@@ -46,7 +46,8 @@ RUN rm -rf node_modules/@hopwhistle/sdk && \
 
 WORKDIR /app/apps/worker
 
-
+# Generate Prisma client before building
+RUN cd /app/apps/api && pnpm exec prisma generate
 
 RUN pnpm build
 
