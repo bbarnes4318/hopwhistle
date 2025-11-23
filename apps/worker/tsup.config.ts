@@ -11,4 +11,5 @@ export default defineConfig({
   target: 'es2022',
   outDir: 'dist',
   noExternal: [/@hopwhistle\/.*/],
+  external: ['@opentelemetry/*'],
 });

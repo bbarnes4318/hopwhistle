@@ -14,11 +14,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "declarationMap": true,
+    "declaration": false,
+    "declarationMap": false,
     "sourceMap": true,
-    "composite": true,
-    "incremental": true,
+    "composite": false,
+    "incremental": false,
     "baseUrl": ".",
     "paths": {
       "@callfabric/shared": ["./packages/shared/src"],
@@ -29,5 +29,17 @@
       "@callfabric/sdk/*": ["./packages/sdk/src/*"]
     }
   },
-  "exclude": ["node_modules", "dist", "build", ".next", "coverage"]
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    "**/dist",
+    "**/build",
+    "**/.next",
+    "**/coverage",
+    "**/*.config.js",
+    "**/*.config.ts",
+    "**/tests/**/*.js",
+    "**/*.spec.js",
+    "**/*.test.js"
+  ]
 }
