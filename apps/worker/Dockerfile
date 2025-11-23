@@ -28,6 +28,11 @@ RUN pnpm --filter @hopwhistle/shared exec tsup --no-dts
 RUN pnpm --filter @hopwhistle/routing-dsl exec tsup --no-dts
 RUN pnpm --filter @hopwhistle/sdk exec tsup --no-dts
 
+# FIX: Ensure built artifacts are in node_modules
+RUN cp -r packages/shared/dist node_modules/@hopwhistle/shared/ || true
+RUN cp -r packages/routing-dsl/dist node_modules/@hopwhistle/routing-dsl/ || true
+RUN cp -r packages/sdk/dist node_modules/@hopwhistle/sdk/ || true
+
 WORKDIR /app/apps/worker
 
 
