@@ -88,13 +88,17 @@ async function buildServer() {
   });
 
   // Load OpenAPI spec path
-  const baseDir = join(process.cwd(), '../../docs');
+  const isProduction = process.env.NODE_ENV === 'production';
+  const specPath = isProduction
+    ? join(process.cwd(), 'docs', 'openapi.yaml')
+    : join(process.cwd(), '../../docs', 'openapi.yaml');
+  const baseDir = isProduction ? join(process.cwd(), 'docs') : join(process.cwd(), '../../docs');
 
   // Register Swagger - use static mode to load from external spec file
   await server.register(swagger, {
     mode: 'static',
     specification: {
-      path: './openapi.yaml',
+      path: specPath,
       baseDir: baseDir,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       postProcessor: (spec: any) => {
