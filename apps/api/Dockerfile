@@ -91,6 +91,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/api/package.json ./package.json
 COPY --from=builder /app/docs ./docs
+COPY --from=builder /app/apps/api/prisma ./prisma
 
 USER nextjs
 
