@@ -59,7 +59,7 @@
 
     <!-- Gateways -->
     <gateways>
-      <X-PRE-PROCESS cmd="include" data="sip_profiles/external/*.xml"/>
+      <X-PRE-PROCESS cmd="include" data="/etc/freeswitch/sip_profiles/external/*.xml"/>
     </gateways>
 
     <!-- Call Limits -->
