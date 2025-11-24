@@ -29,6 +29,7 @@
     <param name="auth-calls" value="true"/>
     <param name="auth-all-packets" value="true"/>
     <param name="auth-ip" value="$${env(TRUNK_AUTH_IP)}"/>
+    <param name="apply-inbound-acl" value="domains"/>
 
     <!-- NAT Traversal -->
     <param name="aggressive-nat-detection" value="true"/>
