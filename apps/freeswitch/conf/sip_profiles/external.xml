@@ -35,13 +35,8 @@
     <param name="rtp-autoflush-during-bridge" value="true"/>
     <param name="apply-nat-acl" value="nat.auto"/>
 
-    <!-- TLS Settings (optional) -->
-    <param name="tls" value="$${env(ENABLE_TLS)}"/>
-    <param name="tls-bind-params" value="transport=tls"/>
-    <param name="tls-sip-port" value="5061"/>
-    <param name="tls-cert-dir" value="$${base_dir}/conf/tls"/>
-    <param name="tls-verify-date" value="true"/>
-    <param name="tls-verify-policy" value="none"/>
+    <!-- TLS Settings (disabled) -->
+    <param name="tls" value="false"/>
 
     <!-- SRTP Settings (optional) -->
     <param name="rtp-secure-media" value="$${env(ENABLE_SRTP)}"/>
