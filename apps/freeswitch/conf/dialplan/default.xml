@@ -32,6 +32,8 @@
         <action application="log" data="INFO Outbound call to ${destination_number} via SignalWire"/>
         <action application="set" data="effective_caller_id_number=+17866929905"/>
         <action application="set" data="effective_caller_id_name=+17866929905"/>
+        <!-- SignalWire often requires P-Asserted-Identity with the correct domain -->
+        <action application="export" data="sip_h_P-Asserted-Identity=<sip:+17866929905@pvn-shanevici.sip.signalwire.com>"/>
         <action application="bridge" data="sofia/gateway/signalwire/${destination_number}"/>
       </condition>
     </extension>
