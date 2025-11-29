@@ -19,7 +19,7 @@ services:
       - S3_SECRET_KEY=${S3_SECRET_KEY}
       - S3_REGION=${S3_REGION}
     ports:
-      - "${PORT:-3001}:3001"
+      - '${PORT:-3001}:3001'
     networks:
       - data_net
     # Removed depends_on to prevent "undefined service" errors during merged startup
@@ -48,8 +48,10 @@ services:
     restart: always
     env_file:
       - ../../.env
+    environment:
+      - HOSTNAME=0.0.0.0
     ports:
-      - "3000:3000"
+      - '3000:3000'
     networks:
       - data_net
     # Removed depends_on to prevent "undefined service" errors during merged startup
