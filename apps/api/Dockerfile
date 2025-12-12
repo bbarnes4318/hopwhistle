@@ -57,13 +57,10 @@ WORKDIR /app/apps/api
 
 # --- FIX: Aggressive Patching to Unblock Build ---
 
-# 1. Fix the 'generateCsrfToken' error by adding a dummy export to session.ts if missing
-RUN echo "export const generateCsrfToken = () => 'mock-token';" >> src/middleware/session.ts
-
-# 2. Fix routes/index.ts pointing to wrong audit file location (Dynamic Import)
+# 1. Fix routes/index.ts pointing to wrong audit file location (Dynamic Import)
 RUN sed -i "s|'../audit.js'|'../services/audit.js'|g" src/routes/index.ts || true
 
-# 3. Fix other potential path errors
+# 2. Fix other potential path errors
 RUN sed -i "s|from '../lib/|from '../../lib/|g" src/services/provisioning/provisioning-service.ts || true
 RUN sed -i "s|from '../../lib/|from '../../../lib/|g" src/services/provisioning/adapters/*.ts || true
 # -------------------------------------------------
