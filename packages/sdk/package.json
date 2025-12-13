@@ -16,7 +16,7 @@
   },
   "scripts": {
     "generate:types": "tsx scripts/generate-types.ts",
-    "build": "pnpm generate:types && tsup",
+    "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
