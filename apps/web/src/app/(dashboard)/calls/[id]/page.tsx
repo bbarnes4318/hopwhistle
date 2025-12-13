@@ -1,6 +1,6 @@
 'use client';
 
-import { Play, Pause } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { use } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +18,8 @@ const mockCall = {
   asr: 0.65,
   createdAt: new Date().toISOString(),
   transcript: {
-    fullText: 'Hello, this is a sample transcript of the call. The caller was interested in our services.',
+    fullText:
+      'Hello, this is a sample transcript of the call. The caller was interested in our services.',
     segments: [
       { start: 0, end: 5, speaker: 'SPEAKER_00', text: 'Hello, this is a sample transcript.' },
       { start: 5, end: 10, speaker: 'SPEAKER_01', text: 'Yes, I am interested in your services.' },
@@ -119,4 +120,3 @@ export default function CallDetailPage({ params }: { params: Promise<{ id: strin
     </div>
   );
 }
-

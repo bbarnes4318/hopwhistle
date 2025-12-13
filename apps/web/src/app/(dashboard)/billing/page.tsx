@@ -1,12 +1,19 @@
 'use client';
 
 import { Download, DollarSign, TrendingUp, Loader2 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { apiClient } from '@/lib/api';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
@@ -35,16 +42,14 @@ export default function BillingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadBillingData();
-  }, []);
-
-  const loadBillingData = async () => {
+  const loadBillingData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const [invoicesResponse, balanceResponse] = await Promise.all([
-        apiClient.get<{ data: Invoice[]; meta: any }>('/api/v1/billing/invoices'),
+        apiClient.get<{ data: Invoice[]; meta: { page: number; limit: number; total: number } }>(
+          '/api/v1/billing/invoices'
+        ),
         apiClient.get<Balance>('/api/v1/billing/balance'),
       ]);
 
@@ -59,7 +64,11 @@ export default function BillingPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    void loadBillingData();
+  }, [loadBillingData]);
 
   if (loading) {
     return (
@@ -99,7 +108,9 @@ export default function BillingPage() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(parseFloat(balance.available))}</div>
+              <div className="text-2xl font-bold">
+                {formatCurrency(parseFloat(balance.available))}
+              </div>
             </CardContent>
           </Card>
 
@@ -109,7 +120,9 @@ export default function BillingPage() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(parseFloat(balance.pending))}</div>
+              <div className="text-2xl font-bold">
+                {formatCurrency(parseFloat(balance.pending))}
+              </div>
             </CardContent>
           </Card>
 
@@ -147,7 +160,7 @@ export default function BillingPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices.map((invoice) => (
+                {invoices.map(invoice => (
                   <TableRow key={invoice.id}>
                     <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
                     <TableCell>
@@ -175,4 +188,3 @@ export default function BillingPage() {
     </div>
   );
 }
-
