@@ -12,7 +12,7 @@ import { auditLog } from '../services/audit.js';
 /**
  * Login endpoint
  */
-export function registerAuthRoutes(fastify: FastifyInstance): void {
+export async function registerAuthRoutes(fastify: FastifyInstance): Promise<void> {
   // Login
   fastify.post('/auth/login', async (request, reply) => {
     const { email, password } = request.body as { email: string; password: string };
