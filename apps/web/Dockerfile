@@ -48,6 +48,10 @@ RUN sed -i 's/const nextConfig = {/const nextConfig = { typescript: { ignoreBuil
 RUN rm -f playwright.config.ts
 RUN rm -rf e2e
 
+# Build-time environment variables for Next.js
+ARG NEXT_PUBLIC_API_URL=http://localhost:3001
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
 # Run build
 RUN pnpm exec next build
 
