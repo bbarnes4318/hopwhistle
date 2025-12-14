@@ -188,6 +188,10 @@ async function buildServer() {
   );
   await server.register(registerRecordingAnalysisUploadRoutes);
 
+  // Register Agent Phone routes (VOIP softphone for agents)
+  const { registerAgentPhoneRoutes } = await import('./routes/agent-phone.js');
+  await server.register(registerAgentPhoneRoutes);
+
   // Error handler
   server.setErrorHandler((error, request, reply) => {
     server.log.error(error);
