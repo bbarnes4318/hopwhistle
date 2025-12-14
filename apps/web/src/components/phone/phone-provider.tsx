@@ -354,9 +354,14 @@ export function PhoneProvider({
   // ============================================================================
 
   useEffect(() => {
+    // Skip WebSocket in SSR or if not in browser
+    if (typeof window === 'undefined') return;
+
+    const apiKey = process.env.NEXT_PUBLIC_API_KEY || 'demo-key';
+
     const connectWebSocket = () => {
       try {
-        const ws = new WebSocket(`${wsUrl}/ws/events?apiKey=demo-key`);
+        const ws = new WebSocket(`${wsUrl}/ws/events?apiKey=${apiKey}`);
 
         ws.onopen = () => {
           ws.send(
@@ -400,6 +405,11 @@ export function PhoneProvider({
   // ============================================================================
 
   useEffect(() => {
+    // Skip if not in browser or mediaDevices not available (requires HTTPS)
+    if (typeof window === 'undefined' || !navigator.mediaDevices) {
+      return;
+    }
+
     const loadAudioDevices = async () => {
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -416,7 +426,7 @@ export function PhoneProvider({
           setSelectedAudioOutput(defaultOutput.deviceId);
         }
       } catch {
-        setError('Please allow microphone access to use the phone.');
+        // Silently fail - microphone access is optional until making a call
       }
     };
 

@@ -48,8 +48,10 @@ RUN rm -rf e2e
 # Build-time environment variables for Next.js
 ARG NEXT_PUBLIC_API_URL=http://localhost:3001
 ARG NEXT_PUBLIC_WS_URL=ws://localhost:3001
+ARG NEXT_PUBLIC_API_KEY=demo-key
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL}
+ENV NEXT_PUBLIC_API_KEY=${NEXT_PUBLIC_API_KEY}
 
 # Run build
 RUN pnpm exec next build
