@@ -45,11 +45,14 @@
     <load module="mod_xml_cdr"/>
     <load module="mod_xml_rpc"/>
     <load module="mod_xml_curl"/>
-    
+
     <!-- Recording modules -->
     <load module="mod_say_en"/>
     <load module="mod_sndfile"/>
-    
+
+    <!-- WebRTC/Verto module for browser-based calling -->
+    <load module="mod_verto"/>
+
     <!-- TLS/SRTP modules -->
     <load module="mod_tls"/>
   </modules>

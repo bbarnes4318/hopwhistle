@@ -27,8 +27,8 @@ COPY apps/freeswitch/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 RUN mkdir -p /usr/local/freeswitch/scripts && chmod +x /usr/local/freeswitch/scripts/*.sh || true
 
-# Expose ports
-EXPOSE 5060/udp 5060/tcp 5080/udp 5080/tcp 8021/tcp 16384-32768/udp
+# Expose ports (SIP, ESL, RTP, Verto WebSocket)
+EXPOSE 5060/udp 5060/tcp 5080/udp 5080/tcp 8021/tcp 8082/tcp 8083/tcp 16384-32768/udp
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["freeswitch", "-nf", "-nc"]

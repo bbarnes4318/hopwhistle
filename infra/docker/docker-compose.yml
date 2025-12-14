@@ -100,6 +100,8 @@ services:
       - '5080:5080/tcp'
       - '5063:5061/tcp'
       - '8021:8021/tcp'
+      - '8082:8082/tcp' # Verto WebSocket (secure)
+      - '8083:8083/tcp' # Verto WebSocket (dev)
     environment:
       - FREESWITCH_ESL_PASSWORD=${FREESWITCH_ESL_PASSWORD:-ClueCon}
       - API_URL=http://api:3001
