@@ -22,10 +22,11 @@ import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Numbers', href: '/numbers', icon: Phone },
+  { name: 'Phone', href: '/phone', icon: Phone },
+  { name: 'Numbers', href: '/numbers', icon: PhoneCall },
   { name: 'Campaigns', href: '/campaigns', icon: Megaphone },
   { name: 'Flows', href: '/flows', icon: GitBranch },
-  { name: 'Calls', href: '/calls', icon: PhoneCall },
+  { name: 'Calls', href: '/calls', icon: AudioLines },
   { name: 'Billing', href: '/billing', icon: Receipt },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
