@@ -148,7 +148,7 @@ export class EventBus {
     handler: (channel: EventChannel, payload: EventPayload) => void
   ): Promise<() => Promise<void>> {
     if (!this.subscriber) {
-      this.subscriber = getRedisClient();
+      this.subscriber = getRedisClient().duplicate();
     }
 
     const messageHandler = (channel: string, message: string) => {
