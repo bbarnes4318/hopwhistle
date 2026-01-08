@@ -11,7 +11,7 @@
 
   <profiles>
     <!-- WebSocket profile for browser connections -->
-    <profile name="default-verto-profile">
+    <profile name="internal-verto-profile">
       <!-- Bind to all interfaces on port 8082 for WebSocket -->
       <param name="bind-local" value="0.0.0.0:8082"/>
 
@@ -41,7 +41,7 @@
       <param name="ext-rtp-ip" value="stun:stun.l.google.com:19302"/>
 
       <!-- Dialplan context for verto calls -->
-      <param name="context" value="default"/>
+      <param name="context" value="internal"/>
 
       <!-- Timer values -->
       <param name="timer-T1" value="500"/>
@@ -63,7 +63,7 @@
       <param name="userauth" value="true"/>
       <param name="inbound-codec-string" value="opus,PCMU,PCMA"/>
       <param name="outbound-codec-string" value="opus,PCMU,PCMA"/>
-      <param name="context" value="default"/>
+      <param name="context" value="internal"/>
       <param name="use-ice" value="true"/>
       <param name="rtp-ip" value="$${local_ip_v4}"/>
       <param name="ext-rtp-ip" value="$${external_rtp_ip}"/>
