@@ -68,3 +68,8 @@ PAUSE
 __pycache__/
 .env.master
 .env
+.env.master
+.env
+pause.flag
+*.log
+recordings/

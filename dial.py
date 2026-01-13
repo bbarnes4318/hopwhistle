@@ -1,37 +1,34 @@
 import subprocess, time, json, random, os
 
-# --- PRODUCTION CONFIGURATION ---
+# --- CONFIGURATION ---
 AGENT_TRANSFER_NUMBER = "+18653969104"
 TELNYX_VALID_DID = "+17868404940"
 DID_FILE = '/opt/hopwhistle/dids.json'
 LEAD_FILE = '/opt/hopwhistle/test_lead.txt'
 PROGRESS_FILE = '/opt/hopwhistle/already_called.log'
-TELNYX_GATEWAY = "sip.telnyx.com"
 PAUSE_FLAG = "/opt/hopwhistle/pause.flag"
 
+# CARRIER CONFIGS
+VOXBEAM_PREFIX = "0011104" # Call Center Route
+
 def start_blast():
-    print("--- NOVA-3 PRODUCTION DIALER STARTING ---")
+    print("--- NOVA-3 SMART FAILOVER DIALER STARTING ---")
+    print("--- SEQUENCE: TELNYX -> VOXBEAM -> ANVEO ---")
     
     while True:
-        # 1. Check for Pause
         if os.path.exists(PAUSE_FLAG):
-            print("--- DIALER PAUSED VIA DASHBOARD ---")
+            print("--- PAUSED ---")
             time.sleep(10)
             continue
 
-        # 2. Load Leads and DIDs
         try:
-            with open(DID_FILE, 'r') as f:
-                DID_POOL = json.load(f)
-            with open(LEAD_FILE, 'r') as f:
-                leads = [line.strip() for line in f if line.strip()]
-            
+            with open(DID_FILE, 'r') as f: DID_POOL = json.load(f)
+            with open(LEAD_FILE, 'r') as f: leads = [l.strip() for l in f if l.strip()]
             done = []
             if os.path.exists(PROGRESS_FILE):
-                with open(PROGRESS_FILE, 'r') as f:
-                    done = [line.strip() for line in f]
+                with open(PROGRESS_FILE, 'r') as f: done = [l.strip() for l in f]
         except Exception as e:
-            print(f"FILE ERROR: {e}")
+            print(f"File Error: {e}")
             time.sleep(10)
             continue
 
@@ -42,38 +39,50 @@ def start_blast():
             time.sleep(60)
             continue
 
-        # 3. Dialing Loop
         for customer_num in remaining:
-            if os.path.exists(PAUSE_FLAG):
-                break
-
-            # Pick a random mask from your pool
-            mask = random.choice(list(DID_POOL.keys())).replace('+', '')
+            if os.path.exists(PAUSE_FLAG): break
             
+            # 1. Prepare Number Formats
             clean = "".join(filter(str.isdigit, customer_num))
-            final_dest = f"+{clean}" if clean.startswith('1') else f"+1{clean}"
             
-            print(f"DIALING: {final_dest} (Mask: {mask})")
+            # Telnyx Format (+1...)
+            fmt_telnyx = f"+{clean}" if clean.startswith('1') else f"+1{clean}"
             
+            # Voxbeam/Anveo Format (1...)
+            fmt_clean = f"1{clean}" if not clean.startswith('1') else clean
+            
+            mask = random.choice(list(DID_POOL.keys())).replace('+', '')
+
+            # 2. CONSTRUCT THE FAILOVER CHAIN (The Magic Part)
+            # Syntax: carrier1|carrier2|carrier3
+            # We use [] to set specific timeouts for each leg (e.g., give Telnyx 6 seconds before failing over)
+            
+            leg_a = f"[leg_timeout=6]sofia/internal/{fmt_telnyx}@sip.telnyx.com"
+            leg_b = f"[leg_timeout=6]sofia/gateway/voxbeam/{VOXBEAM_PREFIX}{fmt_clean}"
+            leg_c = f"[leg_timeout=6]sofia/gateway/anveo/{fmt_clean}"
+            
+            # The Pipe '|' creates the automatic fallback
+            dial_string = f"{leg_a}|{leg_b}|{leg_c}"
+            
+            print(f"DIALING CHAIN: {customer_num}")
+            
+            # Global variables apply to ALL legs
             vars = (f"absolute_codec_string=PCMU,transfer_to_num={AGENT_TRANSFER_NUMBER},"
                     f"telnyx_auth_id={TELNYX_VALID_DID},fractel_mask_num={mask},"
                     f"origination_caller_id_number={TELNYX_VALID_DID},"
-                    f"effective_caller_id_number={mask},effective_caller_id_name={mask},ignore_early_media=true")
+                    f"effective_caller_id_number={mask},effective_caller_id_name={mask},"
+                    f"ignore_early_media=true,continue_on_fail=true") # continue_on_fail is key!
 
-            # THE FIXED COMMAND (NO CUT-OFF)
-            cmd = f"docker exec docker-freeswitch-1 fs_cli -x \"bgapi originate {{{vars}}}sofia/internal/{final_dest}@{TELNYX_GATEWAY} &lua(/opt/hopwhistle/handler.lua)\""
+            cmd = f"docker exec docker-freeswitch-1 fs_cli -x \"bgapi originate {{{vars}}}{dial_string} &lua(/opt/hopwhistle/handler.lua)\""
 
-            # Execute and actually SHOW the response
             result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
             
             if result.returncode != 0:
-                print(f"DOCKER ERROR: {result.stderr}")
+                print(f"ERROR: {result.stderr}")
             else:
-                print(f"FREESWITCH RESPONSE: {result.stdout.strip()}")
+                print(f"SENT: {result.stdout.strip()}")
 
-            with open(PROGRESS_FILE, 'a') as f:
-                f.write(f"{customer_num}\n")
-            
+            with open(PROGRESS_FILE, 'a') as f: f.write(f"{customer_num}\n")
             time.sleep(random.uniform(10, 18))
 
 if __name__ == '__main__':
