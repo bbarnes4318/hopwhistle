@@ -108,22 +108,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Start docker-compose services
+      - name: Start docker compose services
         run: |
           cd infra/docker
-          docker-compose -f docker-compose.dev.yml up -d postgres redis minio freeswitch kamailio rtpengine
-          docker-compose -f docker-compose.dev.yml ps
+          docker compose -f docker compose.dev.yml up -d postgres redis minio freeswitch kamailio rtpengine
+          docker compose -f docker compose.dev.yml ps
 
       - name: Wait for services to be ready
         run: |
           echo "Waiting for services to start..."
           sleep 30
-          docker-compose -f infra/docker/docker-compose.dev.yml ps
+          docker compose -f infra/docker/docker compose.dev.yml ps
 
       - name: Check service health
         run: |
-          docker-compose -f infra/docker/docker-compose.dev.yml ps | grep -q "kamailio.*Up" || exit 1
-          docker-compose -f infra/docker/docker-compose.dev.yml ps | grep -q "freeswitch.*Up" || exit 1
+          docker compose -f infra/docker/docker compose.dev.yml ps | grep -q "kamailio.*Up" || exit 1
+          docker compose -f infra/docker/docker compose.dev.yml ps | grep -q "freeswitch.*Up" || exit 1
 
       - name: Run SIP tests
         run: pnpm test:sip:ci
@@ -137,17 +137,17 @@ jobs:
         if: failure()
         run: |
           echo "=== Docker Compose Logs ==="
-          docker-compose -f infra/docker/docker-compose.dev.yml logs --tail=100
+          docker compose -f infra/docker/docker compose.dev.yml logs --tail=100
           echo "=== FreeSWITCH Logs ==="
-          docker-compose -f infra/docker/docker-compose.dev.yml logs freeswitch --tail=50
+          docker compose -f infra/docker/docker compose.dev.yml logs freeswitch --tail=50
           echo "=== Kamailio Logs ==="
-          docker-compose -f infra/docker/docker-compose.dev.yml logs kamailio --tail=50
+          docker compose -f infra/docker/docker compose.dev.yml logs kamailio --tail=50
 
       - name: Cleanup
         if: always()
         run: |
           cd infra/docker
-          docker-compose -f docker-compose.dev.yml down -v
+          docker compose -f docker compose.dev.yml down -v
 
   summary:
     name: PR Summary
