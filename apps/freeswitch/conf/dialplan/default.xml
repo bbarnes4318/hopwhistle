@@ -26,36 +26,33 @@
       </condition>
     </extension>
 
-    <!-- External Outbound Calls via SignalWire -->
-    <!-- External Outbound Calls via SignalWire -->
+    <!-- External Outbound Calls via Telnyx -->
     <extension name="external-outbound-calls">
       <!-- Normalize 10 digit to E.164 -->
       <condition field="destination_number" expression="^(\d{10})$" break="on-true">
         <action application="log" data="INFO Normalizing 10-digit number ${destination_number} to E.164"/>
         <action application="set" data="e164_dest=+1${destination_number}"/>
-        <action application="execute_extension" data="send-to-signalwire"/>
+        <action application="execute_extension" data="send-to-telnyx"/>
       </condition>
       <!-- Normalize 11 digit (1+10) to E.164 -->
       <condition field="destination_number" expression="^1(\d{10})$" break="on-true">
         <action application="log" data="INFO Normalizing 11-digit number ${destination_number} to E.164"/>
         <action application="set" data="e164_dest=+1$1"/>
-        <action application="execute_extension" data="send-to-signalwire"/>
+        <action application="execute_extension" data="send-to-telnyx"/>
       </condition>
       <!-- Already E.164 or other -->
       <condition field="destination_number" expression="^(\+.+)$" break="on-true">
         <action application="set" data="e164_dest=${destination_number}"/>
-        <action application="execute_extension" data="send-to-signalwire"/>
+        <action application="execute_extension" data="send-to-telnyx"/>
       </condition>
     </extension>
 
-    <extension name="send-to-signalwire">
+    <extension name="send-to-telnyx">
       <condition field="destination_number" expression="^.+$">
-        <action application="log" data="INFO Outbound call to ${e164_dest} via SignalWire"/>
-        <action application="set" data="effective_caller_id_number=+17866929905"/>
-        <action application="set" data="effective_caller_id_name=+17866929905"/>
-        <!-- SignalWire often requires P-Asserted-Identity with the correct domain -->
-        <action application="export" data="sip_h_P-Asserted-Identity=<sip:+17866929905@pvn-shanevici.sip.signalwire.com>"/>
-        <action application="bridge" data="sofia/gateway/signalwire/${e164_dest}"/>
+        <action application="log" data="INFO Outbound call to ${e164_dest} via telnyx gateway"/>
+        <action application="set" data="effective_caller_id_number=$${OUTBOUND_CALLER_ID}"/>
+        <action application="set" data="effective_caller_id_name=$${OUTBOUND_CALLER_ID}"/>
+        <action application="bridge" data="sofia/gateway/telnyx/${e164_dest}"/>
       </condition>
     </extension>
 
@@ -260,7 +257,7 @@
         <action application="set" data="effective_caller_id_number=${caller_id_number}"/>
         <action application="set" data="effective_caller_id_name=${caller_id_name}"/>
         <!-- SignalWire often requires P-Asserted-Identity -->
-        <action application="export" data="sip_h_P-Asserted-Identity=<sip:+17866929905@pvn-shanevici.sip.signalwire.com>"/> 
+        <action application="export" data="sip_h_P-Asserted-Identity=<sip:+17866929905@pvn-shanevici.sip.signalwire.com>"/>
         <action application="bridge" data="sofia/gateway/signalwire/${e164_dest}"/>
       </condition>
       <!-- Catch already normalized or other formats -->
